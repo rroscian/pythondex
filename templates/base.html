@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pokédex{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --pokemon-red: #ff0000;
+            --pokemon-blue: #3b4cca;
+            --pokemon-yellow: #ffde00;
+            --pokemon-gold: #b69e31;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background-color: var(--pokemon-red);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+            font-size: 1.5rem;
+        }
+        
+        .pokemon-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pokemon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-img-top {
+            background-color: #f1f1f1;
+            padding: 1rem;
+            height: 180px;
+            object-fit: contain;
+        }
+        
+        .badge {
+            margin-right: 5px;
+        }
+        
+        /* Couleurs pour les types de Pokémon */
+        .type-Normal { background-color: #A8A878; }
+        .type-Feu, .type-Fire { background-color: #F08030; }
+        .type-Eau, .type-Water { background-color: #6890F0; }
+        .type-Électrik, .type-Electric { background-color: #F8D030; }
+        .type-Plante, .type-Grass { background-color: #78C850; }
+        .type-Glace, .type-Ice { background-color: #98D8D8; }
+        .type-Combat, .type-Fighting { background-color: #C03028; }
+        .type-Poison { background-color: #A040A0; }
+        .type-Sol, .type-Ground { background-color: #E0C068; }
+        .type-Vol, .type-Flying { background-color: #A890F0; }
+        .type-Psy, .type-Psychic { background-color: #F85888; }
+        .type-Insecte, .type-Bug { background-color: #A8B820; }
+        .type-Roche, .type-Rock { background-color: #B8A038; }
+        .type-Spectre, .type-Ghost { background-color: #705898; }
+        .type-Dragon { background-color: #7038F8; }
+        .type-Ténèbres, .type-Dark { background-color: #705848; }
+        .type-Acier, .type-Steel { background-color: #B8B8D0; }
+        .type-Fée, .type-Fairy { background-color: #EE99AC; }
+        
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .pokemon-detail {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        
+        .pokemon-sprite {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .pokemon-sprite img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+        }
+        
+        .stats-bar {
+            height: 20px;
+            border-radius: 10px;
+            background-color: #e9ecef;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .stats-bar-fill {
+            height: 100%;
+            background-color: var(--pokemon-blue);
+        }
+        
+        .moves-table {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .pokedex-header {
+            background-color: var(--pokemon-red);
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Animation pour les sprites */
+        .sprite-animate:hover {
+            animation: bounce 0.5s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-gamepad me-2"></i>Pokédex Showdown
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('pokedex') }}">Pokédex</a>
+                    </li>
+                </ul>
+                <form class="d-flex" action="{{ url_for('search') }}" method="get">
+                    <input class="form-control me-2" type="search" name="q" placeholder="Rechercher un Pokémon..." aria-label="Search">
+                    <button class="btn btn-light" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages flash -->
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Contenu -->
+    <main class="container py-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <p>© 2025 Pokédex Showdown - Développé avec Flask</p>
+            <p class="mb-0">Données fournies par l'API Pokémon Showdown</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

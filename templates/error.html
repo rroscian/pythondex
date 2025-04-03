@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Erreur | Pokédex Showdown{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <i class="fas fa-exclamation-triangle text-danger fa-4x mb-4"></i>
+    <h1 class="display-4 mb-4">Une erreur est survenue</h1>
+    <p class="lead">{{ error }}</p>
+    <div class="mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-primary me-2">
+            <i class="fas fa-home me-2"></i>Retour à l'accueil
+        </a>
+        <a href="{{ url_for('pokedex') }}" class="btn btn-secondary">
+            <i class="fas fa-book me-2"></i>Consulter le Pokédex
+        </a>
+    </div>
+</div>
+{% endblock %}

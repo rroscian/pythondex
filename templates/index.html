@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil | Pokédex Showdown{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold mb-4">Bienvenue sur Pokédex Showdown</h1>
+    <p class="lead">Explorez la base de données complète des Pokémon avec des informations détaillées sur chaque espèce.</p>
+</div>
+
+<div class="row justify-content-center mb-5">
+    <div class="col-md-8">
+        <div class="search-container">
+            <form action="{{ url_for('search') }}" method="get" class="mb-4">
+                <div class="input-group input-group-lg">
+                    <input type="text" name="q" class="form-control" placeholder="Rechercher un Pokémon..." required>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search me-2"></i>Rechercher
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row text-center mb-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 pokemon-card">
+            <div class="card-body">
+                <i class="fas fa-book fa-3x mb-3 text-primary"></i>
+                <h3 class="card-title">Pokédex Complet</h3>
+                <p class="card-text">Accédez à la liste complète des Pokémon avec leurs types et caractéristiques.</p>
+                <a href="{{ url_for('pokedex') }}" class="btn btn-outline-primary">Explorer le Pokédex</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 pokemon-card">
+            <div class="card-body">
+                <i class="fas fa-info-circle fa-3x mb-3 text-warning"></i>
+                <h3 class="card-title">Détails Complets</h3>
+                <p class="card-text">Consultez les statistiques, capacités et évolutions de chaque Pokémon.</p>
+                <a href="{{ url_for('pokedex') }}" class="btn btn-outline-warning">Voir les Pokémon</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 pokemon-card">
+            <div class="card-body">
+                <i class="fas fa-bolt fa-3x mb-3 text-danger"></i>
+                <h3 class="card-title">Attaques et Capacités</h3>
+                <p class="card-text">Découvrez toutes les attaques que chaque Pokémon peut apprendre.</p>
+                <a href="{{ url_for('pokedex') }}" class="btn btn-outline-danger">Découvrir</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

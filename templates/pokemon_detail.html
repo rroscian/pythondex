@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pokemon.name }} | Pokédex Showdown{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('pokedex') }}">Pokédex</a></li>
+        <li class="breadcrumb-item active">{{ pokemon.name }}</li>
+    </ol>
+</nav>
+
+<div class="pokemon-detail mb-5">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="pokemon-sprite">
+                <img src="{{ sprite }}" alt="{{ pokemon.name }}" class="img-fluid sprite-animate">
+            </div>
+            <div class="text-center mb-4">
+                <h1 class="mb-2">{{ pokemon.name }}</h1>
+                <p class="text-muted">#{{ "%03d"|format(pokemon.num) }}</p>
+                <div class="mb-3">
+                    {% for type in pokemon.types %}
+                        <span class="badge type-{{ type }} p-2">{{ type }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <h3 class="border-bottom pb-2 mb-3">Statistiques</h3>
+            <div class="row mb-4">
+                {% for stat_key, stat_name in [
+                    ('hp', 'PV'),
+                    ('atk', 'Attaque'),
+                    ('def', 'Défense'),
+                    ('spa', 'Att. Spé'),
+                    ('spd', 'Déf. Spé'),
+                    ('spe', 'Vitesse')
+                ] %}
+                    {% if pokemon.baseStats and stat_key in pokemon.baseStats %}
+                        {% set stat_value = pokemon.baseStats[stat_key] %}
+                        {% set percentage = (stat_value / 255) * 100 %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ stat_name }}</span>
+                                <span>{{ stat_value }}</span>
+                            </div>
+                            <div class="stats-bar">
+                                <div class="stats-bar-fill" style="width: {{ percentage|float }}%;"></div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            <h3 class="border-bottom pb-2 mb-3">Informations</h3>
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <p><strong>Taille:</strong> {{ pokemon.heightm }} m</p>
+                    <p><strong>Poids:</strong> {{ pokemon.weightkg }} kg</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <p><strong>Capacités:</strong>
+                        {% if pokemon.abilities %}
+                            {% for ability_id, ability_name in pokemon.abilities.items() %}
+                                {{ ability_name }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            
+            {% if moves %}
+                <h3 class="border-bottom pb-2 mb-3">Attaques</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped moves-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nom</th>
+                                <th>Type</th>
+                                <th>Puissance</th>
+                                <th>Précision</th>
+                                <th>PP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for move in moves %}
+                                <tr>
+                                    <td>{{ move.name }}</td>
+                                    <td>
+                                        <span class="badge type-{{ move.type }}">{{ move.type }}</span>
+                                    </td>
+                                    <td>{{ move.power }}</td>
+                                    <td>{{ move.accuracy }}</td>
+                                    <td>{{ move.pp }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

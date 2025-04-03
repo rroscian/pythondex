@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Pokédex | Pokédex Showdown{% endblock %}
+
+{% block content %}
+<div class="pokedex-header">
+    <h1>Pokédex Complet</h1>
+    <p class="lead mb-0">Découvrez tous les Pokémon et leurs informations</p>
+</div>
+
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {% for pokemon in pokemon_list %}
+        <div class="col">
+            <a href="{{ url_for('pokemon_detail', pokemon_id=pokemon.id) }}" class="text-decoration-none">
+                <div class="card h-100 pokemon-card">
+                    <div class="card-img-top p-3 d-flex justify-content-center align-items-center">
+                        <img src="{{ pokemon.sprite }}" class="sprite-animate" alt="{{ pokemon.name }}" style="max-height: 120px;">
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-1">#{{ "%03d"|format(pokemon.num) }}</p>
+                        <h5 class="card-title">{{ pokemon.name }}</h5>
+                        <div class="mt-2">
+                            {% for type in pokemon.types %}
+                                <span class="badge type-{{ type }}">{{ type }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

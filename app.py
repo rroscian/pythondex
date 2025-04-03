@@ -110,6 +110,3 @@ def get_sprite_url(pokemon_id):
     """Générer l'URL du sprite d'un Pokémon"""
     # Utiliser l'API officielle de sprites Pokemon
     return f"https://play.pokemonshowdown.com/sprites/ani/{pokemon_id}.gif"
-
-if __name__ == '__main__':
-    app.run(debug=True)
